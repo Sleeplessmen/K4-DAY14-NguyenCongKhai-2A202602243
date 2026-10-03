@@ -1,0 +1,86 @@
+PHIẾU CÁ NHÂN — DAY 14
+Annotation nộp bằng Save/completed trên CVAT. Coach thu/review riêng.
+
+Packet / slot / case / lượt: Lượt 1 (J01 lõi)
+Task / job: Day14-NguyenCongKhai (66 frame)
+Track CVAT / object được giao: Track ID 0, label "vehicles"
+Phạm vi local frame / source frame: 0–65 (66 frames liên tiếp)
+Guideline / profile calibration đã đọc: Robotaxi B guideline, calib-diagnostic.json (Lab Coach cấp)
+
+Frame fit và lý do: Frame 28 (position [-15.73, 1.76, 0.71], Z=0.71m thấp nhất) - gần xe ego nhất, cụm điểm dày nhất, ranh giới xe rõ ràng trên cả Top/Side/Front view
+L / W / H (m): 4.94 / 2.08 / 1.67 (giữ nguyên suốt track, không thay đổi )
+
+Keyframe quan trọng và lý do:
+- Frame 0: Keyframe khởi tạo track (bắt đầu track)
+- Frame 3: Thêm sau rework - xe bắt đầu di chuyển, yaw ổn định ở -0.18
+- Frame 6: Thêm sau rework - xe tiếp tục di chuyển theo hướng, yaw thay đổi nhẹ (-0.25)
+- Frame 10: Xe di chuyển đều, yaw quay trở lại -0.18
+- Frame 11: Yaw điều chỉnh nhẹ (-0.23)
+- Frame 14: Xe di chuyển ổn định, yaw -0.20
+- Frame 20: Xe di chuyển sang phía trái theo đường cong, yaw -0.18
+- Frame 22: Xe tiếp tục theo đường cong, yaw ổn định
+- Frame 23: Thêm sau rework - xe di chuyển theo đường cong, yaw thay đổi nhẹ (-0.25)
+- Frame 25: Thêm sau rework - xe tiếp tục theo đường cong, yaw điều chỉnh (-0.19), Z tăng nhẹ
+- Frame 28: Frame fit tham chiếu, gần camera nhất (Z=0.71m)
+- Frame 30: Sau frame fit, xe tiếp tục di chuyển, yaw -0.18
+- Frame 33: Thêm sau rework - xe di chuyển ổn định theo đường cong, yaw -0.17
+- Frame 35: Xe bắt đầu di chuyển sang hướng mới nhẹ, yaw -0.16
+- Frame 40: Xe tiếp tục di chuyển, yaw giảm dần (-0.13)
+- Frame 45: Yaw bắt đầu giảm độ âm, hướng tới dương (-0.05)
+- Frame 48: Yaw = 0.0 (thẳng hoàn toàn)
+- Frame 50: Xe tiếp tục di chuyển theo đường cong nhẹ, yaw = 0.04
+- Frame 55: Xe di chuyển về phía sau camera, yaw ổn định ở 0.04
+- Frame 60: Gần cuối đoạn, yaw ổn định
+- Frame 65: Keyframe cuối (khép track)
+
+Frame nội suy đã kiểm: Tất cả 66 frame (45 frame nội suy)
+
+Đoạn thưa / che khuất / dễ nhầm identity:
+- Che khuất: Không có frame nào bị occluded 
+- Dễ nhầm identity: Không có
+
+Phát hiện temporal và frame/evidence:
+1. Dimension drift: KHÔNG - Scale [4.94, 2.08, 1.67] giữ nguyên suốt 66 frame 
+2. Orientation drift: CÓ NHẸ - Rotation (yaw) thay đổi dần từ -0.25 -> 0.04 qua các frame. Yaw thay đổi từ âm sang dương là hệ quả tự nhiên của việc xe đi trên đường cong, khiến hướng di chuyển (heading) dần chuyển từ trái sang thẳng rồi sang phải. Đó không phải là quay đầu, mà là chuyển động uốn lượn
+3. ID switch: KHÔNG 
+4. Fragmentation: KHÔNG 
+5. Co box do sparsity: KHÔNG - Point cloud đủ dày để xác định kích thước xe
+
+Quyết định độc lập trước review:
+- Giữ track với L/W/H=4.94/2.08/1.67m xuyên suốt
+- Keyframe đã đặt ở các điểm thay đổi yaw/đường đi
+- Xe di chuyển theo quỹ đạo cong liên tục, yaw thay đổi dần để phản ánh hướng di chuyển tức thời (heading)
+
+Phản hồi nhận được: Chưa có
+
+Hành động sau review và lý do:
+- Thêm 5 keyframes (3, 6, 23, 25, 33) để đảm bảo nội suy chính xác theo đường cong
+- Chỉnh sửa position/rotation cho khớp point cloud
+- Giữ kích thước tham chiếu
+
+Ca bình thường Camera–LiDAR (frame/camera/quan sát):
+Frame 28 / image_1 (CAM_P_F) / Cuboid chiếu khớp hoàn toàn với xe trên camera trước. Point cloud dày, ranh giới rõ
+
+Ca khó (frame/camera/quan sát 2D, 3D):
+Frame 45-48 / image_1 / Quan sát 2D: Xe di chuyển thẳng dần, yaw chuyển từ âm sang dương (hệ quả tự nhiên của chuyển động uốn lượn trên đường cong)
+Quan sát 3D: Yaw thay đổi từ -0.05 -> 0.0 -> 0.04, xe di chuyển theo đường cong nhẹ — heading dần chuyển từ trái sang thẳng rồi sang phải
+
+Giả thuyết nguyên nhân / giới hạn kết luận:
+- Frame 45-48: Yaw thay đổi từ âm sang dương là hệ quả tự nhiên của việc xe đi trên đường cong, khiến hướng di chuyển (heading) dần chuyển từ trái sang thẳng rồi sang phải. Đó không phải là quay đầu, mà là chuyển động uốn lượn
+- Giới hạn: Chưa có overlay từ Coach để đối chiếu chính xác
+
+Hành động sửa / giữ / escalation và người nhận:
+- Sửa: Thêm keyframes, chỉnh position/rotation cho khớp point cloud
+- Giữ: Kích thước L/W/H xuyên suốt, xe di chuyển theo quỹ đạo cong liên tục
+- Escalation: Không
+
+Đã Save và mở lại kiểm: CÓ
+
+Trạng thái job cuối / blocker: Job J01 đã Save & completed 
+
+TỔNG KẾT BỘ JOB
+Job đã bắt đầu: J01 (66 frame)
+Job đã Save/completed: J01 (Save & completed sau rework) 
+Job chưa bắt đầu: 18 job ngắn còn lại (Không cần làm)
+Job còn cần rework / blocker: Không có 
+Thời gian làm J01 / mini-job / self-QC: J01: ~2 giờ, Self-QC: 30 phút
